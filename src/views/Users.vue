@@ -31,7 +31,15 @@
             </button>
         </form>
 
-        <router-link to="/">{{ t("Back to Home") }}</router-link>
+        <div class="flex gap-2 mt-4">
+            <router-link v-if="users.length > 1" to="/play" class="button">
+                {{ t("Play Game") }}
+            </router-link>
+
+            <router-link to="/" class="button">{{
+                t("Back to Home")
+            }}</router-link>
+        </div>
     </div>
 </template>
 

@@ -14,31 +14,31 @@
                         t("Please add users first.")
                     }}</router-link>
                 </div>
-                <input-checkbox
-                    v-for="user in users"
-                    :key="user.id"
-                    :modelValue="
-                        currentGamePlayers.some(
-                            (gp: GamePlayer) => gp.userId === user.id,
-                        )
-                    "
-                    @update:modelValue="togglePlayer(user.id, $event)"
-                >
-                    {{ user.name }}
-                </input-checkbox>
+                <div class="flex gap-2">
+                    <input-checkbox
+                        v-for="user in users"
+                        :key="user.id"
+                        :modelValue="
+                            currentGamePlayers.some(
+                                (gp: GamePlayer) => gp.userId === user.id,
+                            )
+                        "
+                        @update:modelValue="togglePlayer(user.id, $event)"
+                    >
+                        {{ user.name }}
+                    </input-checkbox>
 
-                <button
-                    :disabled="users.length === 0"
-                    @click="selectAllParticipants"
-                >
-                    {{ t("Select All") }}
-                </button>
-                <button
-                    @click="startNewGame"
-                    :disabled="currentGamePlayers.length < 2"
-                >
-                    {{ t("Start Game") }}
-                </button>
+                    <button
+                        :disabled="users.length === 0"
+                        @click="selectAllParticipants"
+                    >
+                        {{ t("Select All") }}
+                    </button>
+
+                    <button @click="startNewGame">
+                        {{ t("Start Game") }}
+                    </button>
+                </div>
             </section>
 
             <section
@@ -112,7 +112,11 @@
             </section>
         </template>
 
-        <router-link to="/">{{ t("Back to Home") }}</router-link>
+        <p>
+            <router-link class="mt-4" to="/">{{
+                t("Back to Home")
+            }}</router-link>
+        </p>
     </div>
 </template>
 
@@ -266,6 +270,10 @@ function skipTurn() {
 
 function startNewGame() {
     if (!currentGame.value) return
+    if (currentGame.value.players.length < 2) {
+        alert(t("At least 2 players are required to start the game"))
+        return
+    }
     startGame(currentGame.value.id)
 }
 
@@ -281,6 +289,7 @@ function endCurrentGame() {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    max-width: 300px;
+    min-width: 360px;
+    width: 100%;
 }
 </style>
