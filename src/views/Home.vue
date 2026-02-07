@@ -12,10 +12,12 @@
         <div>
             <p>
                 <template v-if="thereIsAGameInProgress">
-                    <span>{{ t("A game is currently in progress.") }} </span>
-                    <router-link to="/play">{{
-                        t("Continue playing")
-                    }}</router-link>
+                    <p>{{ t("A game is currently in progress.") }}</p>
+                    <p>
+                        <router-link to="/play">{{
+                            t("Continue playing")
+                        }}</router-link>
+                    </p>
                 </template>
 
                 <router-link v-else-if="users.length > 1" to="/play">

@@ -15,7 +15,7 @@
                 </tr>
             </thead>
             <tr v-for="game in games" :key="game.id">
-                <td>{{ t("Game") }} {{ game.id }} - {{ t(game.status) }}</td>
+                <td>{{ game.id }} - {{ t(game.status) }}</td>
                 <td v-for="user in users" :key="user.id">
                     <span
                         v-if="
