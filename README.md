@@ -21,17 +21,11 @@ First step will be deciding who is playing the game from the list of users that 
 
 Second step will show you whose turn is it and you can already start adding words and points.
 
+It allows you to check if the word proposed is valid or not (using English and Spanish dictionaries)
+
 Once the game is over, click on End game and you will see how many points each player got and who won the game!
 
 ## Previous games
 
 It will list all previous games including who took part in them and how many points they got.
 You will also be able to delete the games if you don't feel happy about them.
-
-# Actions needed
-
-Users CRUD: TODO edit users
-Select users to add them to a game to be created
-Start game - Checks if there are enough participants - Shuffles the participants - Announces who starts the game
-Register a turn - word (optional) - score - comments
-End game - announces the winner - closes the game so you can start again
