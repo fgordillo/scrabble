@@ -25,9 +25,13 @@ export const useScrabble = () => {
         users.value = users.value.filter((u: User) => u.id !== userId)
         // Also remove from gamePlayers
         games.value.forEach((game: Game) => {
-            game.players = game.players.filter((gp: GamePlayer) => gp.userId !== userId)
+            game.players = game.players.filter(
+                (gp: GamePlayer) => gp.userId !== userId,
+            )
             game.turns = game.turns.filter((t: Turn) => {
-                const player = game.players.find((gp: GamePlayer) => gp.id === t.playerId)
+                const player = game.players.find(
+                    (gp: GamePlayer) => gp.id === t.playerId,
+                )
                 return player ? player.userId !== userId : true
             })
         })
@@ -63,7 +67,9 @@ export const useScrabble = () => {
         const game = getGame(gameId)
         if (!game) return
         if (game.status !== "waiting") {
-            console.error("Cannot add players to a game that has already started")
+            console.error(
+                "Cannot add players to a game that has already started",
+            )
             return
         }
         if (game.players.some((gp: GamePlayer) => gp.userId === userId)) {
@@ -80,14 +86,18 @@ export const useScrabble = () => {
         return newPlayer
     }
 
-    function removePlayer(gameId: Game["id"], playerId: GamePlayer["id"]) {
+    function deletePlayer(gameId: Game["id"], playerId: GamePlayer["id"]) {
         const game = getGame(gameId)
         if (!game) return
         if (game.status !== "waiting") {
-            console.error("Cannot remove players from a game that has already started")
+            console.error(
+                "Cannot remove players from a game that has already started",
+            )
             return
         }
-        game.players = game.players.filter((gp: GamePlayer) => gp.id !== playerId)
+        game.players = game.players.filter(
+            (gp: GamePlayer) => gp.id !== playerId,
+        )
     }
 
     function randomizePlayerOrder(gameId: Game["id"]) {
@@ -126,17 +136,30 @@ export const useScrabble = () => {
         if (!game) return
         game.status = "finished"
         // Determine winner based on scores
-        const playerScores: PlayerScore[] = game.players.map((gp: GamePlayer) => {
-            const playerTurns = game.turns.filter((t: Turn) => t.playerId === gp.id)
-            const totalScore = playerTurns.reduce((sum: number, t: Turn) => sum + t.score, 0)
-            return { playerId: gp.id, totalScore }
-        })
-        const winner = playerScores.reduce((max, ps) => (ps.totalScore > max.totalScore ? ps : max), { playerId: 0, totalScore: 0 })
+        const playerScores: PlayerScore[] = game.players.map(
+            (gp: GamePlayer) => {
+                const playerTurns = game.turns.filter(
+                    (t: Turn) => t.playerId === gp.id,
+                )
+                const totalScore = playerTurns.reduce(
+                    (sum: number, t: Turn) => sum + t.score,
+                    0,
+                )
+                return { playerId: gp.id, totalScore }
+            },
+        )
+        const winner = playerScores.reduce(
+            (max, ps) => (ps.totalScore > max.totalScore ? ps : max),
+            { playerId: 0, totalScore: 0 },
+        )
         game.winnerId = winner.playerId
         return game
     }
 
-    function recordTurn(gameId: Game["id"], { playerId, word, score, comment }: Omit<Turn, "id">) {
+    function recordTurn(
+        gameId: Game["id"],
+        { playerId, word, score, comment }: Omit<Turn, "id">,
+    ) {
         const game = getGame(gameId)
         if (!game) return
         const newTurn: Turn = {
@@ -152,23 +175,26 @@ export const useScrabble = () => {
             player.score += score
         }
         // Update current turn player
-        const currentPlayerIndex = game.players.findIndex((gp: GamePlayer) => gp.id === playerId)
+        const currentPlayerIndex = game.players.findIndex(
+            (gp: GamePlayer) => gp.id === playerId,
+        )
         const nextPlayerIndex = (currentPlayerIndex + 1) % game.players.length
         game.currentTurnPlayerId = game.players[nextPlayerIndex]!.id
     }
 
     return {
-        deleteUser,
         users,
         games,
         // Actions
-        addUser,
         addPlayer,
-        removePlayer,
+        addUser,
         createGame,
-        startGame,
-        endGame,
         deleteGame,
+        deletePlayer,
+        deleteUser,
+        editUser,
+        endGame,
         recordTurn,
+        startGame,
     }
 }

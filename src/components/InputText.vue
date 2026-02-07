@@ -3,12 +3,21 @@
         :type="type"
         :placeholder="placeholder"
         :value="modelValue"
-        @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
+        @input="
+            $emit(
+                'update:modelValue',
+                ($event.target as HTMLInputElement).value,
+            )
+        "
     />
 </template>
 
 <script setup lang="ts">
-const { modelValue, placeholder = "", type = "text" } = defineProps<{
+const {
+    modelValue,
+    placeholder = "",
+    type = "text",
+} = defineProps<{
     modelValue: string | number
     placeholder?: string
     type?: "text" | "number"

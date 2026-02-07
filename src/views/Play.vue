@@ -1,64 +1,131 @@
 <template>
     <div>
-        <h1>Play Game</h1>
+        <h1>{{ t("Play Game") }}</h1>
         <section v-if="!currentGame">
-            <p>No active game. Please create a new game first.</p>
+            <p>{{ t("No active game. Please create a new game first.") }}</p>
         </section>
 
         <template v-else>
             <section v-if="currentGame.status === 'waiting'">
-                <h2>Select the participants</h2>
-                <div v-if="users.length === 0">No users available. <router-link to="/users">Please add users first.</router-link></div>
+                <h2>{{ t("Select the participants") }}</h2>
+                <div v-if="users.length === 0">
+                    {{ t("No users available.") }}
+                    <router-link to="/users">{{
+                        t("Please add users first.")
+                    }}</router-link>
+                </div>
                 <input-checkbox
                     v-for="user in users"
                     :key="user.id"
-                    :modelValue="currentGamePlayers.some((gp: GamePlayer) => gp.userId === user.id)"
+                    :modelValue="
+                        currentGamePlayers.some(
+                            (gp: GamePlayer) => gp.userId === user.id,
+                        )
+                    "
                     @update:modelValue="togglePlayer(user.id, $event)"
                 >
                     {{ user.name }}
                 </input-checkbox>
 
-                <button :disabled="users.length === 0" @click="selectAllParticipants">Select All</button>
-                <button @click="startNewGame" :disabled="currentGamePlayers.length < 2">Start Game</button>
+                <button
+                    :disabled="users.length === 0"
+                    @click="selectAllParticipants"
+                >
+                    {{ t("Select All") }}
+                </button>
+                <button
+                    @click="startNewGame"
+                    :disabled="currentGamePlayers.length < 2"
+                >
+                    {{ t("Start Game") }}
+                </button>
             </section>
 
-            <section v-else-if="currentGame.status === 'playing' && currentGame && currentGame.currentTurnPlayerId">
-                <h2>Game in Progress</h2>
-                <p>Current Turn: {{ currentTurnPlayerName }}</p>
+            <section
+                v-else-if="
+                    currentGame.status === 'playing' &&
+                    currentGame &&
+                    currentGame.currentTurnPlayerId
+                "
+            >
+                <h2>{{ t("Game in Progress") }}</h2>
+                <p>{{ t("Current Turn") }}: {{ currentTurnPlayerName }}</p>
                 <form class="turn" @submit.prevent="saveTurn()">
-                    <input-text id="word" type="text" placeholder="Enter word" v-model="newWord" />
-                    <input-text type="number" placeholder="Enter score" v-model.number="newScore" />
-                    <input-text type="text" placeholder="Optional comment" v-model="newComment" />
-                    <button type="submit" class="bg-success">Submit Turn</button>
+                    <input-text
+                        id="word"
+                        type="text"
+                        :placeholder="t('Enter word')"
+                        v-model="newWord"
+                    />
+                    <label class="flex w-100">
+                        <span class="mr-auto">{{ t("Points") }}:</span>
+                        <input-text
+                            type="number"
+                            :placeholder="t('Enter score')"
+                            v-model.number="newScore"
+                        />
+                    </label>
+                    <input-text
+                        type="text"
+                        :placeholder="t('Optional comment')"
+                        v-model="newComment"
+                    />
+                    <button type="submit" class="bg-success">
+                        {{ t("Submit Turn") }}
+                    </button>
+                    <button
+                        type="button"
+                        class="bg-warning"
+                        :disabled="verifyingWord"
+                        @click="checkWord"
+                    >
+                        {{ t("Check Word") }}
+                    </button>
                     <div class="flex gap-2">
-                        <button type="button" class="bg-warning w-100" @click="skipTurn">Skip turn</button>
-                        <button type="button" class="bg-danger w-100" @click="endCurrentGame">End Game</button>
+                        <button
+                            type="button"
+                            class="bg-warning w-100"
+                            @click="skipTurn"
+                        >
+                            {{ t("Skip turn") }}
+                        </button>
+                        <button
+                            type="button"
+                            class="bg-danger w-100"
+                            @click="endCurrentGame"
+                        >
+                            {{ t("End Game") }}
+                        </button>
                     </div>
                 </form>
             </section>
 
             <section v-else-if="currentGame.status === 'finished'">
-                <h2>Game Finished</h2>
-                <p>Final Scores:</p>
+                <h2>{{ t("Game Finished") }}</h2>
+                <p>{{ t("Final Scores") }}:</p>
                 <ul>
-                    <li
-                        v-for="pr in playersRanking"
-                        :key="pr.id"
-                    >
-                        {{ pr.name }}: {{ pr.score }} points
+                    <li v-for="pr in playersRanking" :key="pr.id">
+                        {{ pr.name }}: {{ pr.score }} {{ t("points") }}
                     </li>
                 </ul>
-                <button @click="createGame">Start New Game</button>
+                <button @click="createGame">{{ t("Start New Game") }}</button>
             </section>
         </template>
 
-        <router-link to="/">Back to Home</router-link>
+        <router-link to="/">{{ t("Back to Home") }}</router-link>
     </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from "vue"
+import { useI18n } from "vue-i18n"
 import { useScrabble } from "../scrabble"
+
+import type { Game, GamePlayer, User } from "../types"
+import WordService from "../WordService"
+import InputText from "../components/InputText.vue"
+import InputCheckbox from "../components/InputCheckbox.vue"
+
 const {
     games,
     users,
@@ -66,12 +133,10 @@ const {
     startGame,
     endGame,
     addPlayer,
-    removePlayer,
+    deletePlayer,
     recordTurn,
 } = useScrabble()
-import type { Game, GamePlayer, User } from "../types"
-import InputText from "../components/InputText.vue"
-import InputCheckbox from "../components/InputCheckbox.vue"
+const { t, locale } = useI18n()
 
 const newWord = ref("")
 const newScore = ref<number>(0)
@@ -82,7 +147,9 @@ const currentGamePlayers = computed(() => {
     return currentGame.value.players as GamePlayer[]
 })
 
-const currentGame = computed(() => games.value[games.value.length - 1] as Game | null)
+const currentGame = computed(
+    () => games.value[games.value.length - 1] as Game | null,
+)
 
 if (!currentGame.value || currentGame.value.status === "finished") {
     // If there's no game, we can start one immediately
@@ -90,42 +157,49 @@ if (!currentGame.value || currentGame.value.status === "finished") {
 }
 
 const currentTurnPlayerName = computed(() => {
-    if (!currentGame.value) return "Unknown"
+    if (!currentGame.value) return t("Unknown")
     const currentPlayerId = currentGame.value.currentTurnPlayerId
-    const currentPlayer = currentGamePlayers.value.find((gp: GamePlayer) => gp.id === currentPlayerId)
-    if (!currentPlayer) return "Unknown"
+    const currentPlayer = currentGamePlayers.value.find(
+        (gp: GamePlayer) => gp.id === currentPlayerId,
+    )
+    if (!currentPlayer) return t("Unknown")
     const user = users.value.find((u: User) => u.id === currentPlayer.userId)
-    return user ? user.name : "Unknown"
+    return user ? user.name : t("Unknown")
 })
 
 const playersRanking = computed(() => {
     if (!currentGame.value) return []
-    return [...currentGamePlayers.value].sort((a: GamePlayer, b: GamePlayer) => b.score - a.score).map((gp: GamePlayer) => {
-        const user = users.value.find((u: User) => u.id === gp.userId)
-        return {
-            id: gp.id,
-            name: user ? user.name : "Unknown",
-            score: gp.score,
-        }
-    })
+    return [...currentGamePlayers.value]
+        .sort((a: GamePlayer, b: GamePlayer) => b.score - a.score)
+        .map((gp: GamePlayer) => {
+            const user = users.value.find((u: User) => u.id === gp.userId)
+            return {
+                id: gp.id,
+                name: user ? user.name : t("Unknown"),
+                score: gp.score,
+            }
+        })
 })
 
-function togglePlayer(userId: number, event: Event) {
+function togglePlayer(userId: number, checked: boolean) {
     if (!currentGame.value) return
-    const gp = currentGamePlayers.value.find((gp: GamePlayer) => gp.userId === userId)
-    const isChecked = (event.target as HTMLInputElement).checked
-    if (isChecked) {
+    const gp = currentGamePlayers.value.find(
+        (gp: GamePlayer) => gp.userId === userId,
+    )
+    if (checked) {
         addPlayer(currentGame.value.id, userId)
     } else {
         if (!gp) return
-        removePlayer(currentGame.value.id, gp.id)
+        deletePlayer(currentGame.value.id, gp.id)
     }
 }
 
 function selectAllParticipants() {
     if (!currentGame.value) return
     users.value.forEach((user: User) => {
-        const gp = currentGamePlayers.value.find((gp: GamePlayer) => gp.userId === user.id)
+        const gp = currentGamePlayers.value.find(
+            (gp: GamePlayer) => gp.userId === user.id,
+        )
         if (!gp) {
             addPlayer(currentGame.value!.id, user.id)
         }
@@ -135,7 +209,7 @@ function selectAllParticipants() {
 function saveTurn() {
     if (!currentGame.value) return
     if (newWord.value.length > 0 && newScore.value <= 0) {
-        alert("Remember to include a valid score for the word.")
+        alert(t("Remember to include a valid score for the word"))
         return
     }
     recordTurn(currentGame.value.id, {
@@ -151,6 +225,34 @@ function saveTurn() {
     document.getElementById("word")?.focus()
 }
 
+const verifyingWord = ref(false)
+
+async function checkWord() {
+    if (newWord.value.trim() === "") {
+        alert(t("Please enter a word to check"))
+        return
+    }
+    const language = locale.value.split("-")[0]! as "en" | "es" // Get language code (e.g., "en" from "en-US")
+    try {
+        verifyingWord.value = true
+        const isValid = await WordService.validateWord(newWord.value, language)
+        if (isValid) {
+            alert(t("The word is valid!"))
+        } else {
+            alert(t("The word is not valid."))
+        }
+    } catch (error) {
+        console.error("Error validating word:", error)
+        alert(
+            t(
+                "An error occurred while validating the word. Please try again later.",
+            ),
+        )
+    } finally {
+        verifyingWord.value = false
+    }
+}
+
 function skipTurn() {
     if (!currentGame.value) return
     // Record a turn with 0 score and a comment indicating it was skipped
@@ -158,7 +260,7 @@ function skipTurn() {
         playerId: currentGame.value.currentTurnPlayerId!,
         word: "",
         score: 0,
-        comment: "Turn skipped",
+        comment: t("Turn skipped"),
     })
 }
 

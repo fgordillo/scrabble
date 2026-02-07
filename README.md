@@ -5,6 +5,7 @@ This project is meant to be used to keep track of the scores when playing with f
 ## Home
 
 The Home view serves as an intro to the app, It includes links to:
+
 - Manage users
 - Start a new game
 - See previous games
@@ -31,15 +32,6 @@ You will also be able to delete the games if you don't feel happy about them.
 
 Users CRUD: TODO edit users
 Select users to add them to a game to be created
-Start game
-    - Checks if there are enough participants
-    - Shuffles the participants
-    - Announces who starts the game
-Register a turn
-    - word (optional)
-    - score
-    - comments
-End game
-    - announces the winner
-    - closes the game so you can start again
-
+Start game - Checks if there are enough participants - Shuffles the participants - Announces who starts the game
+Register a turn - word (optional) - score - comments
+End game - announces the winner - closes the game so you can start again
