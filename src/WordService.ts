@@ -25,7 +25,8 @@ export default class WordService {
 
     private static async loadDictionary(lang: string): Promise<void> {
         // Look for the file in the public folder (e.g., public/words/en.txt)
-        const response = await fetch(`/words/${lang}.txt`)
+        const url = `${import.meta.env.BASE_URL}words/${lang}.txt`
+        const response = await fetch(url)
 
         if (!response.ok) throw new Error("File not found")
 
