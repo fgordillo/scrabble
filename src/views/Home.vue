@@ -1,7 +1,6 @@
 <template>
     <div>
-        <h1>Scrabble</h1>
-        <p>{{ t("Welcome to the Scrabble game!") }}</p>
+        <h2>{{ t("Welcome to the Scrabble game!") }}</h2>
         <p>
             {{
                 t(
