@@ -11,15 +11,30 @@
 
                 <button
                     v-if="editingUserId !== user.id"
+                    :aria-label="t('Edit')"
+                    :title="t('Edit')"
                     @click="editingUserId = user.id"
                 >
-                    {{ t("Edit") }}
+                    <img :src="editIcon" />
                 </button>
-                <button v-else class="bg-success" @click="editingUserId = null">
-                    {{ t("Save") }}
+                
+                <button
+                    v-else
+                    class="bg-success"
+                    :title="t('Save')"
+                    :aria-label="t('Save')"
+                    @click="editingUserId = null"
+                >
+                    <img :src="saveIcon" />
                 </button>
-                <button class="bg-danger" @click="deleteUser(user.id)">
-                    {{ t("Delete") }}
+                
+                <button
+                    class="bg-danger"
+                    :title="t('Delete')"
+                    :aria-label="t('Delete')"
+                    @click="deleteUser(user.id)"
+                >
+                    <img :src="deleteIcon" />
                 </button>
             </p>
         </div>
@@ -48,6 +63,9 @@ import { ref } from "vue"
 import { useI18n } from "vue-i18n"
 import { useScrabble } from "../scrabble"
 import InputText from "../components/InputText.vue"
+import editIcon from "../assets/edit.svg"
+import saveIcon from "../assets/save.svg"
+import deleteIcon from "../assets/delete.svg"
 
 const { users, addUser, deleteUser } = useScrabble()
 const { t } = useI18n()

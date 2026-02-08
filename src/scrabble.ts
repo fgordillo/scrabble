@@ -1,13 +1,17 @@
 import { useStorage } from "@vueuse/core"
 import type { User, Game, GamePlayer, Turn } from "./types"
 
+function getNextId(items: { id: number }[]) {
+    return items.length > 0 ? Math.max(...items.map((i) => i.id)) + 1 : 1
+}
+
 export const useScrabble = () => {
     const users = useStorage<User[]>("users", [])
     const games = useStorage<Game[]>("games", [])
 
     function addUser(name: string) {
         const newUser: User = {
-            id: users.value.length + 1,
+            id: getNextId(users.value),
             name,
         }
         users.value.push(newUser)
@@ -39,7 +43,7 @@ export const useScrabble = () => {
 
     function createGame() {
         const newGame: Game = {
-            id: games.value.length + 1,
+            id: getNextId(games.value),
             players: [],
             turns: [],
             status: "waiting",
@@ -77,7 +81,7 @@ export const useScrabble = () => {
             return
         }
         const newPlayer: GamePlayer = {
-            id: game.players.length + 1,
+            id: getNextId(game.players),
             userId,
             score: 0,
             order: 0,
@@ -163,7 +167,7 @@ export const useScrabble = () => {
         const game = getGame(gameId)
         if (!game) return
         const newTurn: Turn = {
-            id: game.turns.length + 1,
+            id: getNextId(game.turns),
             playerId,
             word,
             score,

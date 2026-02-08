@@ -29,8 +29,13 @@
                     <span v-else> - </span>
                 </td>
                 <td>
-                    <button class="bg-danger" @click="removeGame(game.id)">
-                        {{ t("Delete") }}
+                    <button
+                        class="bg-danger"
+                        :title="t('Delete')"
+                        :aria-label="t('Delete')"
+                        @click="removeGame(game.id)"
+                    >
+                        <img :src="deleteIcon" />
                     </button>
                 </td>
             </tr>
@@ -43,6 +48,7 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n"
 import { useScrabble } from "../scrabble"
+import deleteIcon from "../assets/delete.svg"
 import type { GamePlayer, Game } from "../types"
 
 const { games, users, deleteGame } = useScrabble()
