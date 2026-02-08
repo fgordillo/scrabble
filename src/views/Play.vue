@@ -103,11 +103,11 @@
             <section v-else-if="currentGame.status === 'finished'">
                 <h2>{{ t("Game Finished") }}</h2>
                 <p>{{ t("Final Scores") }}:</p>
-                <ul>
+                <ol>
                     <li v-for="pr in playersRanking" :key="pr.id">
                         {{ pr.name }}: {{ pr.score }} {{ t("points") }}
                     </li>
-                </ul>
+                </ol>
                 <button @click="createGame">{{ t("Start New Game") }}</button>
             </section>
         </template>
