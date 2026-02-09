@@ -35,7 +35,7 @@
                         :aria-label="t('Delete')"
                         @click="removeGame(game.id)"
                     >
-                        <img :src="deleteIcon" />
+                        <delete-icon />
                     </button>
                 </td>
             </tr>
@@ -48,7 +48,7 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n"
 import { useScrabble } from "../scrabble"
-import deleteIcon from "../assets/delete.svg"
+import DeleteIcon from "../components/DeleteIcon.vue"
 import type { GamePlayer, Game } from "../types"
 
 const { games, users, deleteGame } = useScrabble()
