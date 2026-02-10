@@ -16,6 +16,7 @@
     "Enter user name": "Enter user name",
     "Enter word": "Enter word",
     "Final Scores": "Final Scores",
+    "finished": "finished",
     "Game Finished": "Game Finished",
     "Game in Progress": "Game in Progress",
     "Game": "Game",
@@ -27,13 +28,11 @@
     "Play Game (requires at least 2 users)": "Play Game (requires at least 2 users)",
     "Play Game": "Play Game",
     "Player": "Player",
+    "playing": "playing",
     "Please add users first.": "Please add users first.",
     "Please enter a word to check": "Please enter a word to check",
-    "Points": "Points",
     "points": "points",
-    "finished": "finished",
-    "playing": "playing",
-    "waiting": "waiting",
+    "Points": "Points",
     "Previous Games": "Previous Games",
     "Ranking": "Ranking",
     "Remember to include a valid score for the word": "Remember to include a valid score for the word",
@@ -52,5 +51,7 @@
     "Unknown": "Unknown",
     "Use the navigation menu to explore different sections of the game.": "Use the navigation menu to explore different sections of the game.",
     "User name cannot be empty.": "User name cannot be empty.",
-    "Welcome to the Scrabble game!": "Welcome to the Scrabble game!"
+    "waiting": "waiting",
+    "Welcome to the Scrabble game!": "Welcome to the Scrabble game!",
+    "Word": "Word"
 }
