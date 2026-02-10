@@ -1,6 +1,7 @@
 <template>
     <div v-if="game">
-        <h1>{{ t("Game") }} {{ game.id }}</h1>
+        <h1>{{ t("Game") }} {{ game.id }} - {{ formatDate(game.startTime) }}
+        </h1>
         <table v-if="game.turns.length > 0">
             <thead>
                 <tr>
@@ -8,6 +9,7 @@
                     <th>{{ t("Player") }}</th>
                     <th>{{ t("Word") }}</th>
                     <th>{{ t("Score") }}</th>
+                    <th>{{ t("Timestamp") }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -16,6 +18,7 @@
                     <td>{{ getName(turn.playerId) }}</td>
                     <td>{{ turn.word }}</td>
                     <td>{{ turn.score }}</td>
+                    <td>{{ formatTime(turn.timestamp) }}</td>
                 </tr>
             </tbody>
         </table>
@@ -55,7 +58,7 @@ import { computed } from "vue"
 import { useI18n } from "vue-i18n"
 import { useScrabble } from "../scrabble"
 import type { Game, GamePlayer } from "../types"
-
+    
 const { games, users } = useScrabble()
 const { t } = useI18n()
 
@@ -77,6 +80,20 @@ const rankedPlayers = computed(() => {
     )
     return playerScores.sort((a, b) => b.score - a.score)
 })
+
+// Returns the time formatted as "HH:MM:SS" or "-" if no timestamp
+function formatTime(timestamp?: string): string {
+    if (!timestamp) return "-"
+    const date = new Date(timestamp)
+    return date.toLocaleTimeString()
+}
+
+// Returns the date formatted as "YYYY-MM-DD" or "-" if no timestamp
+function formatDate(timestamp?: string): string {
+    if (!timestamp) return "-"
+    const date = new Date(timestamp)
+    return date.toLocaleDateString()
+}
 
 function getName(playerId: number): string {
     const player = game.value?.players.find((p) => p.id === playerId)

@@ -127,6 +127,7 @@ export const useScrabble = () => {
         randomizePlayerOrder(gameId)
         game.status = "playing"
         game.currentTurnPlayerId = game.players[0]!.id
+        game.startTime = new Date().toISOString()
         return game
     }
 
@@ -139,6 +140,7 @@ export const useScrabble = () => {
         const game = getGame(gameId)
         if (!game) return
         game.status = "finished"
+        game.endTime = new Date().toISOString()
         // Determine winner based on scores
         const playerScores: PlayerScore[] = game.players.map(
             (gp: GamePlayer) => {
@@ -172,6 +174,7 @@ export const useScrabble = () => {
             word,
             score,
             comment,
+            timestamp: new Date().toISOString(),
         }
         game.turns.push(newTurn)
         const player = game.players.find((gp: GamePlayer) => gp.id === playerId)

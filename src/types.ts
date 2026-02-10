@@ -17,6 +17,8 @@ export interface Game {
     status: "waiting" | "playing" | "finished"
     winnerId: GamePlayer["id"] | null
     currentTurnPlayerId: GamePlayer["id"] | null
+    startTime?: string
+    endTime?: string
 }
 
 export interface Turn {
@@ -25,4 +27,5 @@ export interface Turn {
     word?: string
     score: number
     comment?: string // Bingo, etc.
+    timestamp: string
 }
