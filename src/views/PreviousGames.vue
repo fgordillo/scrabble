@@ -15,7 +15,7 @@
                 </tr>
             </thead>
             <tr v-for="game in games" :key="game.id">
-                <td>{{ game.id }} - {{ t(game.status) }}</td>
+                <td><router-link :to="{ name: 'game', params: { id: game.id } }">{{ game.id }} - {{ t(game.status) }}</router-link></td>
                 <td v-for="user in users" :key="user.id">
                     <span
                         v-if="

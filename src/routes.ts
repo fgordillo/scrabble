@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router"
+import { createRouter, createWebHistory, type RouteLocationNormalized } from "vue-router"
 
 const routes = [
     {
@@ -20,6 +20,14 @@ const routes = [
         path: "/play",
         name: "play",
         component: () => import("./views/Play.vue"),
+    },
+    {
+        path: "/game/:id",
+        name: "game",
+        component: () => import("./views/GameDetail.vue"),
+        props: (route: RouteLocationNormalized) => ({
+            gameId: Number(route.params.id),
+        }),
     },
 ]
 

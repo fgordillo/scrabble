@@ -20,6 +20,7 @@ function getDefaultLocale() {
 }
 
 const i18n = createI18n({
+    legacy: false,
     locale: getDefaultLocale(),
     fallbackLocale: "en",
     messages: {
